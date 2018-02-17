@@ -193,11 +193,11 @@ However, modifying config files manually is highly recommended.
 
 ## Exit Codes
 
-It will be convenient for you to call `notifier` using program if there are exit codes supplied (e.g. code `130` for `CTRL-C` termination, and use `echo $?` to catch it).
+It will be convenient for you to call `notifier` using program if there are exit codes supplied (e.g. code `130` for `CTRL-C` termination, and use `echo $?` to catch it).
 
 `notifier` will exit with a code ranging from 0~255 if any error happened during the notification (e.g. code `30` for invalid slack token).
 
-For general exit codes, please refer to <http://www.tldp.org/LDP/abs/html/exitcodes.html>
+For general UNIX/LINUX exit codes, please refer to <http://www.tldp.org/LDP/abs/html/exitcodes.html>
 
 Codes   |   Temporary or Permanent   |  Meaning | WTD |
 ---     |   --- |   --- | --- |
