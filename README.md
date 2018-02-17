@@ -52,7 +52,13 @@ which will download all files to `$GOPATH/src/github.com/` and build a binary fi
 
 Then put necessary files in `/usr/local/bin` and `$HOME` as described above.
 
-This method is not recommended unless you really need these GO codes.
+```
+cp $GOPATH/src/github.com/charleshenryhugo/Notifier/notifier /usr/local/bin/
+cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.defaults.yml $HOME
+cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.notifyrc.yml $HOME
+```
+
+This method is not recommended unless you really need all these GO codes.
 
 ## Usage
 
