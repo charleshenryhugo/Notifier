@@ -215,7 +215,7 @@ Codes   |   Temporary or Permanent   |  Meaning | WTD |
 19 | P | error occurs while closing an email client | restart
 30 | P | slack token is invalid | check your slack token (in config file)
 31 | P | target slack user ID or channel ID invalid | check target slack IDs
-32 | T | lose internet connection or get refused by slack host | try again
+32 | T | lose internet connection or get refused by slack host | wait for seconds and try again
 
 ## Demo
 
