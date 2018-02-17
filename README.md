@@ -199,12 +199,23 @@ However, modifying config files manually is highly recommended.
 
 For general exit codes, please refer to <http://www.tldp.org/LDP/abs/html/exitcodes.html>
 
-Codes   |  TEM or PERM  | Meaning
----     |   ---         | ---
-0       |    -          | notification success
-1       |    -          | general error
-
-
+Codes   |   Temporary or Permanent   |  Meaning | WTD |
+---     |   --- |   --- | --- |
+0       |   -   |   notification success | -
+1       |   P   |   general error | restart
+55      |   P   |   error during parsing .notityrc.yml | check config files
+56      |   P   |   error during parsing .defaults.yml | check config files
+12 | P | lose internet connection or get refused by remote host | check network, host and port (in config file)
+13 | P | error occurs while building a smtp email client | check network, host and port
+14 | P | error occurs while authenticating mail account | check your account(address, pasword) and network
+15 | P | error occurs while applying email sender  | check your email address
+16 | P | error occurs while adding email receivers | check receivers' email address
+17 | P | error occurs while initializing or close a iostream for email client | restart
+18 | P | error occurs while writing message to email client | restart
+19 | P | error occurs while closing an email client | restart
+30 | P | slack token is invalid | check your slack token (in config file)
+31 | P | target slack user ID or channel ID invalid | check target slack IDs
+32 | T | lose internet connection or get refused by slack host | try again
 
 ## Demo
 
