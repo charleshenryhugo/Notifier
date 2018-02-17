@@ -44,11 +44,11 @@ Optional: (you can ignore these optional files below)
 
 ### use go get
 
-If you have installed GOLang, then you can get all files here with:
+If you have installed GO, then you can get all files here with:
 ```
 go get github.com/charleshenryhugo/Notifier
 ```
-which will download all files to `$GOPATH/src/github.com/` and build a binary file `Binary` to `$GOPATH/bin/`
+which will download all files to `$GOPATH/src/github.com/` and build a binary file `Notifier` to `$GOPATH/bin/`
 
 Then put necessary files in `/usr/local/bin` and `$HOME` as described above.
 
