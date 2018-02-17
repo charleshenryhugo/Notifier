@@ -25,7 +25,7 @@ Get slack token from:
 
 download the binary file:
 
-- Notifier
+- notifier
 
 and put it in `/usr/local/bin` (or any other directory which is included by $PATH), then you can use it as a command.
 
@@ -42,9 +42,17 @@ Optional: (you can ignore these optional files below)
 - slackListFile
 - emailListFile
 
-### use homebrew
+### use go get
 
-To be added.
+If you have installed GOLang, then you can get all files here with:
+```
+go get github.com/charleshenryhugo/Notifier
+```
+which will download all files to `$GOPATH/src/github.com/` and build a binary file `Binary` to `$GOPATH/bin/`
+
+Then put necessary files in `/usr/local/bin` and `$HOME` as described above.
+
+This method is not recommended unless you really need these GO codes.
 
 ## Usage
 
