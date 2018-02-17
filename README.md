@@ -27,7 +27,7 @@ download the binary file:
 
 - Notifier
 
-and put it in `/usr/local/bin` (or any other directory which is included by $PATH)
+and put it in `/usr/local/bin` (or any other directory which is included by $PATH), then you can use it as a command.
 
 download the following config files:
 
@@ -191,7 +191,20 @@ You can use the command `default` to overwrite any default settings.
 
 However, modifying config files manually is highly recommended.
 
-## Error Codes
+## Exit Codes
+
+It will be convenient for you to call `notifier` using program if there are exit codes supplied (e.g. code `130` for `CTRL-C` termination, and use `echo $?` to catch it).
+
+`notifier` will exit with a code ranging from 0~255 if any error happened during the notification (e.g. code `30` for invalid slack token).
+
+For general exit codes, please refer to <http://www.tldp.org/LDP/abs/html/exitcodes.html>
+
+Codes   |  TEM or PERM  | Meaning
+---     |   ---         | ---
+0       |    -          | notification success
+1       |    -          | general error
+
+
 
 ## Demo
 
