@@ -16,7 +16,7 @@ Get slack token from:
 
 ## Requirements
 
-If you prefer to use the binary file `notifier` directly, then the requirements are as follows:
+If you prefer to use the binary file `notifier` directly, then the requirements are as follows:
 
 - darwin (UNIX-like, Mach, BSD)
 - amd64
