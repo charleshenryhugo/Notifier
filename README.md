@@ -16,8 +16,13 @@ Get slack token from:
 
 ## Requirements
 
+If you prefer to use the binary file `notifier` directly, then the requirements are as follows:
+
 - darwin (UNIX-like, Mach, BSD)
 - amd64
+
+If you have installed GO, then no extra requirements, `go get` will handle everything.
+
 
 ## Installation
 
@@ -27,14 +32,14 @@ download the binary file:
 
 - notifier
 
-and put it in `/usr/local/bin` (or any other directory which is included by $PATH), then you can use it as a command.
+and put it in `/usr/local/bin` (or any other directory which is included by `$PATH`), then you can use it as a command.
 
 download the following config files:
 
 - .defaults.yml
 - .notifyrc.yml
 
-and put them in $HOME
+and put them in $`HOME`
 
 Optional: (you can ignore these optional files below)
 
@@ -50,15 +55,15 @@ go get github.com/charleshenryhugo/Notifier
 ```
 which will download all files to `$GOPATH/src/github.com/` and build a binary file `Notifier` to `$GOPATH/bin/`
 
-Then put necessary files in `/usr/local/bin` and `$HOME` as described above.
+Then put binary file and config files in `/usr/local/bin` and `$HOME` as described above.
 
-```
-cp $GOPATH/src/github.com/charleshenryhugo/Notifier/notifier /usr/local/bin/
+``` 
+cp $GOPATH/bin/Notifier /usr/local/bin/
 cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.defaults.yml $HOME
 cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.notifyrc.yml $HOME
 ```
 
-This method is not recommended unless you really need all these GO codes.
+The second method is recommended because `go get` will build binary file from GO codes according to your OS config.
 
 ## Usage
 
