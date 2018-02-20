@@ -2,18 +2,23 @@ package main
 
 import (
 	"log"
+	"runtime"
 
 	"github.com/urfave/cli"
 )
 
 //MultiRoutineNotify operates all possible notifications
 //with multi goroutines
+//can increase CPUS with runtime.GOMAXPROCS(2)
 func MultiRoutineNotify() error {
 	//parse notifiers from notifiers config file
 	ntfs, err := parseNotifiers(notifyrcFile)
 	if err != NIL {
 		return cli.NewExitError("", int(err))
 	}
+
+	//dedicate 2 CPUs to two notifiers
+	runtime.GOMAXPROCS(2)
 
 	//ERR channel of each routine
 	var EmailERR ERR
