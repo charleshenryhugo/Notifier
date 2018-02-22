@@ -4,58 +4,58 @@ Notifier is a simple command line tool written in GO and can be used to send not
 
 ## Overview
 
-Notifier is a command line tool, which can send email and slack notifications.(More notification methods to be added)
+Notifier is a command line tool that can send emails and/or slack notifications. More notification methods are to be added. The supported methods are:
 
-Users will have to obtain a valid email account and slack token before using Notifier.
+- e-mails
+- Slack message (users have to obtain a slack token before using Notifier)
 
-Users can only send notifications to their own slack group specified by the slack token.
+## Prerequisites
 
-Get slack token from:
+Any environments on which golang supports are required. More specifically,
+if you use the binary file `notifier`, then the requirements are as follows:
 
-<https://api.slack.com/custom-integrations/legacy-tokens>
+- Linux or Darwin (Windows may need a small change in the source code.)
 
-## Requirements
+If you have golang on your system, there are no extra requirements; `go get` will handle everything.
 
-If you prefer to use the binary file `notifier` directly, then the requirements are as follows:
-
-- darwin (UNIX-like, Mach, BSD)
-- amd64
-
-If you have installed GO, then no extra requirements, `go get` will handle everything.
-
+Notifier is tested only on macOS.
 
 ## Installation
 
-### download directly
+You can install Notifier either by downloading the binary file or by using `go get`.
 
-download the binary file:
+### Download directly
+
+Download the binary file:
 
 - notifier
 
-and put it in `/usr/local/bin` (or any other directory which is included by `$PATH`), then you can use it as a command.
+and put it in `/usr/local/bin` (or any other directory which is included in `$PATH`), then you can use it as a command.
 
-download the following config files:
+Download the following config files:
 
 - .defaults.yml
 - .notifyrc.yml
 
-and put them in $`HOME`
+and put them direcly under `$HOME`.
 
-Optional: (you can ignore these optional files below)
+Optionally, you can download the following files. You can ignore these optional files.
 
 - error.log
 - slackListFile
 - emailListFile
 
-### use go get
+### Using `go get`
 
-If you have installed GO, then you can get all files here with:
+If you have installed golang, then you can install Notifier with:
+
 ```
 go get github.com/charleshenryhugo/Notifier
 ```
+
 which will download all files to `$GOPATH/src/github.com/` and build a binary file `Notifier` to `$GOPATH/bin/`
 
-Then put binary file and config files in `/usr/local/bin` and `$HOME` as described above.
+Then put binary file in `/usr/local/bin` (or anywhere you like) and the config files just under `$HOME` as described above.
 
 ``` 
 cp $GOPATH/bin/Notifier /usr/local/bin/
@@ -63,13 +63,13 @@ cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.defaults.yml $HOME
 cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.notifyrc.yml $HOME
 ```
 
-The second method is recommended because `go get` will build binary file from GO codes according to your OS config.
+The second method (`go get`) is recommended because `go get` builds a binary file from go code optimized to your OS settings.
 
 ## Usage
 
 ### Options and Commands
 
-Just type `notifier --help` or `notifier -h` , out comes the usage for options and commands:
+Just type `notifier --help` or `notifier -h`, and you see the usage for options and commands:
 
 ```
 COMMANDS:
@@ -91,25 +91,23 @@ GLOBAL OPTIONS:
    --version, -v                    print the version
 ```
 
-### files
+### Configuration files
 
 - $HOME/.defaults.yml
 
-This file is used for configuring default settings such as default notification message and subject.
-
-(You can find more details in the file itself.)
+This file is used for configuring default settings such as a default notification message and a subject.
+You can find more details in the file in the repository.
 
 - $HOME/.notifyrc.yml
 
-This file is used for configuring the notification methods such as slack token and email account
+This file is used for configuring the notification methods such as a slack token and an email account
 
-There is an key `state` in .notifyrc.yml. If it's value is `off` or `false`, any operations associated with that notifier will not be executed. So set the `state` as `on` or `true` to make sure that notifier is valid.
+There is a key `state` in .notifyrc.yml. When its value is `off` (or `false`), any operations associated with that notifier will not be executed. So set the `state` as `on` (or `true`) to make sure that that notifier is valid.
+You can find more details in the file in the repository.
 
-(You can find more details in the file itself.)
+### Examples
 
-### Options
-
-e.g.1
+#### Example 1
 
 ```
 notifier -x -s "new notif" -m "some error happened!" -e "google@gmail.com" -e "yahoo@gmail.com" -kf "somedir/slackListFile"
@@ -133,7 +131,7 @@ One ID in a line and no blank line.
 
 Don't forget to add `-x` or `-exe` to explicitly confirm the sending operation
 
-e.g.2
+#### Example 2
 
 ```
 notifier -x -ef "somedir/emailListFile" -k U7BL3HC86 -k U7BL3HC87 -k U7BL3HC88
@@ -152,7 +150,7 @@ One email address in a line and no blank line.
 
 In addition, subject and message will be set according to`$HOME/.defaults.yml`, because no message or subject option is specified.
 
-e.g.3
+#### Example 3
 
 ```
 notifier -x
@@ -173,7 +171,7 @@ That is:
 
 For the usage of each command, just type `notifier [COMMAND] --help`.
 
-e.g.1
+#### Example 1
 
 ```
 notifier default --help
@@ -199,7 +197,7 @@ OPTIONS:
    --help, -h  show help
 ```
 
-e.g.2
+#### Example 2
 
 ```
 notifier default msg "this is a new notification message"
@@ -212,13 +210,13 @@ However, modifying config files manually is highly recommended.
 
 ## Exit Codes
 
-It will be convenient for you to call `notifier` using program if there are exit codes supplied (e.g. code `130` for `CTRL-C` termination, and use `echo $?` to catch it).
+You might want to know if `notifier` did a job or an error occurred. An exit code will tall you the case (e.g. code `130` for `CTRL-C` termination, and use `echo $?` to see it).
 
-`notifier` will exit with a code ranging from 0~255 if any error happened during the notification (e.g. code `30` for invalid slack token).
+`notifier` will exit with an exit code ranging from 1~127 (not all values are used) if any error happened during sending notification (e.g. code `30` for invalid slack token).
 
 For general UNIX/LINUX exit codes, please refer to <http://www.tldp.org/LDP/abs/html/exitcodes.html>
 
-Codes   |   Temporary or Permanent   |  Meaning | WTD |
+Exit Code |   Temporary or Permanent   |  Meaning | What to Do |
 ---     |   --- |   --- | --- |
 0       |   -   |   notification success | -
 1       |   P   |   general error | restart
