@@ -4,25 +4,26 @@ Notifier is a simple command line tool written in GO and can be used to send not
 
 ## Overview
 
-Notifier is a command line tool that can send emails and/or slack notifications. More notification methods are to be added. The supported methods are:
+Notifier is a command line tool that can send emails and/or slack notifications. More notification methods are to be added. Currently the supported methods are:
 
 - e-mails
-- Slack message (users have to obtain a slack token before using Notifier)
+- slack message (users have to obtain a slack token before using Notifier)
 
 ## Prerequisites
 
-Any environments on which golang supports are required. More specifically,
+Any environments on which GOLang supports are required. More specifically,
 if you use the binary file `notifier`, then the requirements are as follows:
 
-- Linux or Darwin (Windows may need a small change in the source code.)
+- Darwin (Windows may need a small change in the source code.)
+- amd64
 
-If you have golang on your system, there are no extra requirements; `go get` will handle everything.
+If you have GOLang on your system, there are no extra requirements. `go get` will handle everything.
 
 Notifier is tested only on macOS.
 
 ## Installation
 
-You can install Notifier either by downloading the binary file or by using `go get`.
+You can install Notifier either by downloading the binary file `notifier` or by using `go get`.
 
 ### Download directly
 
@@ -34,7 +35,7 @@ and put it in `/usr/local/bin` (or any other directory which is included in `$PA
 
 Download the following config files:
 
-- .defaults.yml
+- .notifdef.yml
 - .notifyrc.yml
 
 and put them direcly under `$HOME`.
@@ -47,7 +48,7 @@ Optionally, you can download the following files. You can ignore these optional 
 
 ### Using `go get`
 
-If you have installed golang, then you can install Notifier with:
+If you have installed GOLang, then you can install Notifier with:
 
 ```
 go get github.com/charleshenryhugo/Notifier
@@ -59,11 +60,11 @@ Then put binary file in `/usr/local/bin` (or anywhere you like) and the config f
 
 ``` 
 cp $GOPATH/bin/Notifier /usr/local/bin/
-cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.defaults.yml $HOME
+cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.notifdef.yml $HOME
 cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.notifyrc.yml $HOME
 ```
 
-The second method (`go get`) is recommended because `go get` builds a binary file from go code optimized to your OS settings.
+The second method (`go get`) is recommended because `go get` builds a binary file from GO code optimized to your OS settings.
 
 ## Usage
 
@@ -93,7 +94,7 @@ GLOBAL OPTIONS:
 
 ### Configuration files
 
-- $HOME/.defaults.yml
+- $HOME/.notifdef.yml
 
 This file is used for configuring default settings such as a default notification message and a subject.
 You can find more details in the file in the repository.
@@ -148,7 +149,7 @@ yahoo@gmail.com
 
 One email address in a line and no blank line.
 
-In addition, subject and message will be set according to`$HOME/.defaults.yml`, because no message or subject option is specified.
+In addition, subject and message will be set according to`$HOME/.notifdef.yml`, because no message or subject option is specified.
 
 #### Example 3
 
@@ -156,7 +157,7 @@ In addition, subject and message will be set according to`$HOME/.defaults.yml`, 
 notifier -x
 ```
 
-There are no command line options specified, so all the parameters w ill be set according to `$HOME/.defaults.yml`
+There are no command line options specified, so all the parameters will be set according to `$HOME/.notifdef.yml`
 So the trick is, write all necessary default settings in advance and things become easy.
 
 That is:
@@ -164,8 +165,8 @@ That is:
 - create a file(e.g emailListFile) and write all the target email accounts.
 - create a file(e.g slackListFile) and write all the target slack IDs(they must be in your group).
 - create a file(e.g error.log) and write the default message you want to send in the next minute or in the future.
-- configure the files you have just created (or downloaded) in `$HOME/.defaults.yml`.
-- do some other default settings(please refer to `$HOME/.defaults.yml`)
+- configure the files you have just created (or downloaded) in `$HOME/.notifdef.yml`.
+- do some other default settings(please refer to `$HOME/.notifdef.yml`)
 
 ### Commands
 
@@ -210,7 +211,7 @@ However, modifying config files manually is highly recommended.
 
 ## Exit Codes
 
-You might want to know if `notifier` did a job or an error occurred. An exit code will tall you the case (e.g. code `130` for `CTRL-C` termination, and use `echo $?` to see it).
+You might want to know if `notifier` did a job or an error occurred. An exit code will tell you the case (e.g. code `130` for `CTRL-C` termination, and use `echo $?` to see it).
 
 `notifier` will exit with an exit code ranging from 1~127 (not all values are used) if any error happened during sending notification (e.g. code `30` for invalid slack token).
 

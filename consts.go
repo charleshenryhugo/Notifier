@@ -9,7 +9,7 @@ const (
 //config files
 const (
 	notifyrcFile string = ".notifyrc"
-	defaultsFile string = ".defaults"
+	defaultsFile string = ".notifdef"
 )
 
 //Notifiers name
