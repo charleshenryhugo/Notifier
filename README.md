@@ -106,7 +106,7 @@ This file is used for configuring the notification methods such as a slack token
 There is a key `state` in .notifyrc.yml. When its value is `off` (or `false`), any operations associated with that notifier will not be executed. So set the `state` as `on` (or `true`) to make sure that that notifier is valid.
 You can find more details in the file in the repository.
 
-### Examples
+### Option Usage
 
 #### Example 1
 
@@ -168,7 +168,7 @@ That is:
 - configure the files you have just created (or downloaded) in `$HOME/.notifdef.yml`.
 - do some other default settings(please refer to `$HOME/.notifdef.yml`)
 
-### Commands
+### Command Usage
 
 For the usage of each command, just type `notifier [COMMAND] --help`.
 
