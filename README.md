@@ -14,12 +14,12 @@ Notifier is a command line tool that can send emails and/or slack notifications.
 Any environments on which GOLang supports are required. More specifically,
 if you use the binary file `notifier`, then the requirements are as follows:
 
-- Darwin (Windows may need a small change in the source code.)
+- darwin (Windows may need a small change in the source code.)
 - amd64
 
 If you have GOLang on your system, there are no extra requirements. `go get` will handle everything.
 
-Notifier is tested only on macOS.
+Notifier is tested only on macOS and linux.
 
 ## Installation
 
