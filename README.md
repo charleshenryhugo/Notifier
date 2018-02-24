@@ -250,7 +250,7 @@ Remove them with:
 
 ``` shell
 rm $GOPATH/bin/Notifier
-rm -rf $GOPATH/src/github.com/charleshenryhugo/
+rm -rf $GOPATH/src/github.com/charleshenryhugo/Notifier/
 rm /usr/local/bin/Notifier
 rm $HOME/.notifyrc.yml
 rm $HOME/.notifdef.yml
