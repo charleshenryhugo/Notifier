@@ -10,7 +10,8 @@ import (
 
 //confirm to send notifications, default by false
 var (
-	SendConfirm bool = false
+	//SendConfirm(bool) is to confirm the notif-sending operation(set by boolflag -x or -exe)
+	SendConfirm = false
 )
 
 //global input parameters

@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+//Mail is the struct corresponding to a complete email content
+//including the addr of sender, receivers, mail subject(title) and mail body
 type Mail struct {
 	senderID string
 	toIds    []string
@@ -15,17 +17,22 @@ type Mail struct {
 	body     string
 }
 
+//SmtpServer is the struct corresponding to a SMTP server setting
+//including host, port, and TLS setting
 type SmtpServer struct {
 	host      string
 	port      string
 	tlsconfig *tls.Config
 }
 
+//ServerName returns current servername configured by notifyrcFile
+//consisting of host and port
 func (s *SmtpServer) ServerName() string {
 	return s.host + ":" + s.port
 }
 
-//Email has specific form so we need to build it
+//BuildMessage constructs a standard mail message from mail subject(title), mail body, sender and receivers
+//Email has a specific form so we need to build it
 func (mail *Mail) BuildMessage() string {
 	message := bytes.NewBufferString("From: ")
 	message.WriteString(mail.senderID)
@@ -43,8 +50,9 @@ func (mail *Mail) BuildMessage() string {
 	return message.String()
 }
 
-//initialize a mail struct
-//trim the subject if it is longer than MAX_EMAIL_SUBJECT_LEN
+//newMail initializes a mail struct
+//trims the subject if it is longer than MAX_EMAIL_SUBJECT_LEN
+//then returns the mail struct
 func newMail(from string, to []string, subject string, body string) *Mail {
 	if len(subject) > MAX_EMAIL_SUBJECT_LEN {
 		subject = subject[0:255]
@@ -57,6 +65,9 @@ func newMail(from string, to []string, subject string, body string) *Mail {
 
 	return mail
 }
+
+//newSMTPServer initializes a SmtpServer struct from given host and port
+//then returns the struct
 func newSMTPServer(host string, port string) *SmtpServer {
 	smtpServer := new(SmtpServer)
 	smtpServer.host = host
@@ -69,7 +80,8 @@ func newSMTPServer(host string, port string) *SmtpServer {
 	return smtpServer
 }
 
-//send email using SMTP with a specific SMTP server and an account
+//smtpEmail sends email using SMTP protocol with a specific SMTP server and account
+//the core function of email-notifier
 func smtpEmail(mail *Mail, smtpServer *SmtpServer, pwd string) ERR {
 	msgBody := mail.BuildMessage()
 	log.Println("connecting smtpserver", smtpServer.ServerName())

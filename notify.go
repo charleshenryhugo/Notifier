@@ -11,7 +11,7 @@ import (
 //with multi goroutines
 //can increase CPUS with runtime.GOMAXPROCS(2)
 func MultiRoutineNotify() error {
-	//parse notifiers from notifiers config file
+	//parse notifiers from notifyrcFile
 	ntfs, err := parseNotifiers(notifyrcFile)
 	if err != NIL {
 		return cli.NewExitError("", int(err))
