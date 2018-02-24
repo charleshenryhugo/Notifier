@@ -48,7 +48,7 @@ Optionally, you can download the following files. You can ignore these optional 
 
 ### Using `go get`
 
-If you have installed GOLang, then you can install Notifier with:
+If you have installed GOLang, then you can easily install Notifier with:
 
 ```
 go get github.com/charleshenryhugo/Notifier
@@ -58,13 +58,15 @@ which will download all files to `$GOPATH/src/github.com/` and build a binary fi
 
 Then put binary file in `/usr/local/bin` (or anywhere you like) and the config files just under `$HOME` as described above.
 
-``` 
+``` shell
 cp $GOPATH/bin/Notifier /usr/local/bin/
 cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.notifdef.yml $HOME
 cp $GOPATH/src/github.com/charleshenryhugo/Notifier/.notifyrc.yml $HOME
 ```
 
 The second method (`go get`) is recommended because `go get` builds a binary file from GO code optimized to your OS settings.
+
+You can refer to <https://github.com/golang/go> for GO installation.
 
 ## Usage
 
@@ -235,7 +237,24 @@ Exit Code |   Temporary or Permanent   |  Meaning | What to Do |
 31 | P | target slack user ID or channel ID invalid | check target slack IDs
 32 | T | lose internet connection or get refused by slack host | wait for seconds and try again
 
-## Demo
+## Uninstallation
+
+You can also easily uninstall `Notifier` just by removing all the related files and directory, which are:
+
+- Notifier
+- .notifdef.yml
+- .notifyrc.yml
+- $GOPATH/src/github.com/charleshenryhugo/Notifier/
+
+Remove them with:
+
+``` shell
+rm $GOPATH/bin/Notifier
+rm -rf $GOPATH/src/github.com/charleshenryhugo/
+rm /usr/local/bin/Notifier
+rm $HOME/.notifyrc.yml
+rm $HOME/.notifdef.yml
+```
 
 ## Author
 
