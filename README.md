@@ -1,6 +1,7 @@
 # Notifier
 
 Notifier is a simple command line tool written in GO and can be used to send notifications through email and slack.
+
 (This project is ready to be updated from now on.)
 
 ## Overview
