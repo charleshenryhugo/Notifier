@@ -1,13 +1,13 @@
 ---
 # This config file should be put in $HOME/ directory
-# This config file will be extended after more notifiers are addded
+# This config file will be extended after more notifiers are added
 notifiers:
   # email notifier config
   smtpemailnotifier:
     # don't change the "type"
     type: smtpemail
     # state "on"/"true" makes email notification valid, while state "off"/"false" makes it invalid
-    state: on
+    state: off
     # write your email address that sends the notification email
     account: --------@gmail.com
     # write your email password
@@ -17,16 +17,25 @@ notifiers:
     SMTPPort: 465
     # slack notifier config
   slacknotifier:
-    # don't change the "type"
+    # type can only be switched to "slack" or "slackWebhook".
+    # "slack" needs a token, while "slackWebhook" does not
     type: slack
+    # type: slackWebhook
     # state "on"/"true" makes slack notification valid, while state "off"/"false" makes it invalid
     state: on
     # write your slack token(you can get it from
     # https://api.slack.com/custom-integrations/legacy-tokens)
+    # you can ignore this when you use "slackWebhook"
     token: -----------
+    # write your target webhook urls down here(one ore more)
+    # you can get it from https://api.slack.com/incoming-webhooks
+    WebhookURLs:
+      - https://hooks.slack.com/services/ooooooo/pppppppp/xxxxxxxxxx
+      - https://hooks.slack.com/services/ooooooo/pppppppp/xxxxxxxxxx
     # whether you want to send notification as yourself
+    # invalid when the type "slackWebhook" is switched to
     asUser: off
-    # if asUser is false, you will send notification as a robot
+    # if asUser is "false" or "off", you will send notification as a robot
     # specify robot userName and iconEmoji that you prefer
     userName: Notification Robot
     iconEmoji: scream_cat

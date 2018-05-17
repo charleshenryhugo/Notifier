@@ -101,13 +101,24 @@ func postMsgUsers(ntf SlackNotifier, userIDs []string, msgTitle string, attachme
 //to the slack userIDs(ChannelIDs) stored in(to []string)
 //ChannelID and UserID are both available
 func SlackNotify(to []string, subject, msg string, ntfs Notifiers) ([]string, string, ERR) {
-	if len(to) == 0 {
-		return []string{}, "", SLK_NOTGT
-	}
 	ntf := ntfs.SlackNotifier
-	if ntf.Type == "slack" && (ntf.State == true) {
-		attachment := slack.Attachment{Text: msg}
-		return postMsgUsers(ntf, to, subject, attachment)
+	if ntf.State == true {
+		switch strings.ToLower(ntf.Type) {
+		case "slack":
+			if len(to) == 0 {
+				return []string{}, "", SLK_NOTGT
+			}
+			attachment := slack.Attachment{Text: msg}
+			return postMsgUsers(ntf, to, subject, attachment)
+		case "slackwebhook":
+			IconEmoji := ":" + ntf.IconEmoji + ":"
+			//post to all channelIDs stored in slacklistfile only when there is just one webhook url
+			if len(ntf.WebhookURLs) == 1 && len(to) > 0 {
+				return to, "",
+					postMsgWebhookWithChannels(ntf.WebhookURLs[0], to, subject, msg, ntf.UserName, IconEmoji)
+			}
+			return to, "", postMsgWebhooks(ntf.WebhookURLs, subject, msg, ntf.UserName, IconEmoji)
+		}
 	}
 	return []string{}, "", SLK_INVAL
 }

@@ -57,6 +57,15 @@ const (
 	SLK_TOKEN_INVAL  ERR = 30 //slack token not invalid(P)
 	SLK_CHL_ERR      ERR = 31 //token is right, just got stuck in posting to one target user(or channel)(P)
 	SLK_SVR_CONN_ERR ERR = 32 //got stuck because of the network, or be refused by slack host.(T)
-)
 
-//
+	//slack webhook error code
+	REQ_FAIL        ERR = 39 //no network connection
+	INVALID_PAYLOAD ERR = 40 /*HTTP 400 Bad Request the data sent in your request cannot be understood as presented.
+	  verify your content body matches your content type and is structurally valid.*/
+	USER_NOT_FOUND ERR = 42 //HTTP 400 bad Request. the user used in your request does not actually exist.
+	ACTION_FORBID  ERR = 43 //HTTP 403 Forbidden. the team associated with your request has some kind of restriction on the webhook posting in this context.
+	CHL_NOT_FOUND  ERR = 44 //HTTP 404 Not Found. the channel associated with your request does not exist.
+	CHL_ARCHIVED   ERR = 41 //HTTP 410 Gone. the channel has been archived and doesn't accept further messages, even from your incoming webhook.
+	ROLLUP_ERROR   ERR = 50 //HTTP 500 Server Error. something strange and unusual happened that was likely not your fault at all.
+
+)

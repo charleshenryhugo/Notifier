@@ -36,12 +36,13 @@ type SmtpEmailNotifier struct {
 
 //SlackNotifier is the struct corresponding to the yaml:slacknotifier in the config file
 type SlackNotifier struct {
-	Type      string `yaml:"type"`
-	State     bool   `yaml:"state"`
-	Token     string `yaml:"token"`
-	AsUser    bool   `yaml:"asUser"`
-	UserName  string `yaml:"userName"`
-	IconEmoji string `yaml:"iconEmoji"`
+	Type        string   `yaml:"type"`
+	State       bool     `yaml:"state"`
+	Token       string   `yaml:"token"`
+	AsUser      bool     `yaml:"asUser"`
+	UserName    string   `yaml:"userName"`
+	IconEmoji   string   `yaml:"iconEmoji"`
+	WebhookURLs []string `yaml:"WebhookURLs"`
 }
 
 //Add new Notifier struct here:
