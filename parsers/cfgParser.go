@@ -1,8 +1,9 @@
-package main
+package parsers
 
 import (
 	"io/ioutil"
 	"log"
+	"notifier/consts"
 	"strings"
 
 	"github.com/fsnotify/fsnotify"
@@ -74,14 +75,14 @@ func initViper(file string) *viper.Viper {
 //parse notifiers objects from the *.yaml file specified by "file"
 //using viper
 //return a Notifiers struct
-func parseNotifiers(file string) (Notifiers, ERR) {
+func ParseNotifiers(file string) (Notifiers, consts.ERR) {
 	//initialize viper to parse notifyrcFile
-	nviper := initViper(notifyrcFile)
+	nviper := initViper(consts.NotifyrcFile)
 	//find and read notifyrc file
 	err := nviper.ReadInConfig()
 	if err != nil {
 		log.Println(err)
-		return Notifiers{}, NOTIFRC_PARSE_ERR
+		return Notifiers{}, consts.NOTIFRC_PARSE_ERR
 	}
 
 	//initialize Notifiers
@@ -89,9 +90,9 @@ func parseNotifiers(file string) (Notifiers, ERR) {
 	//unmarshall into Notifiers
 	if err := nviper.Unmarshal(&ntfCfg); err != nil {
 		log.Println(err)
-		return Notifiers{}, NOTIFRC_PARSE_ERR
+		return Notifiers{}, consts.NOTIFRC_PARSE_ERR
 	}
-	return ntfCfg.Notifiers, SUCCESS
+	return ntfCfg.Notifiers, consts.SUCCESS
 }
 
 //DfltConfig is the most initial struct(class) corresponding to config-file for default settings
@@ -111,14 +112,14 @@ type Defaults struct {
 
 //parse the Defaults object from *.yaml file
 //return a Defaults struct
-func parseDefaults(file string) (Defaults, ERR) {
-	dviper := initViper(defaultsFile)
+func ParseDefaults(file string) (Defaults, consts.ERR) {
+	dviper := initViper(consts.DefaultsFile)
 
 	//find and read defaults file
 	err := dviper.ReadInConfig()
 	if err != nil {
 		log.Println(err)
-		return Defaults{}, DFLTS_PARSE_ERR
+		return Defaults{}, consts.DFLTS_PARSE_ERR
 	}
 
 	//initialize Defaults object
@@ -126,10 +127,10 @@ func parseDefaults(file string) (Defaults, ERR) {
 	//unmarshall into Defaults
 	if err := dviper.Unmarshal(&dfltCfg); err != nil {
 		log.Println(err)
-		return Defaults{}, DFLTS_PARSE_ERR
+		return Defaults{}, consts.DFLTS_PARSE_ERR
 	}
 
-	return dfltCfg.Defaults, SUCCESS
+	return dfltCfg.Defaults, consts.SUCCESS
 }
 
 /*------the methods of the Defaults struct will only be called when the corresponding argument is blank------*/
@@ -199,12 +200,12 @@ func cfgWrite(item string, newVal interface{}, cfgFile string) error {
 
 //CfgDflt overwrites a specified item to newVal in defaultsFile
 func CfgDflt(item string, newVal interface{}) error {
-	return cfgWrite(item, newVal, defaultsFile)
+	return cfgWrite(item, newVal, consts.DefaultsFile)
 }
 
 //CfgNtfyrc overwrites a specified item to newVal in notifyrc.yml
 func CfgNtfyrc(item string, newVal interface{}) error {
-	return cfgWrite(item, newVal, notifyrcFile)
+	return cfgWrite(item, newVal, consts.NotifyrcFile)
 }
 
 //CfgDfltSbjt overwrites default subject in defaultsFile
@@ -256,7 +257,7 @@ func CfgDfltEmailListFile(newFile string) error {
 //it will modify notifyrc.yml
 func CfgToggStat(ntfName string) error {
 	item := "notifiers." + ntfName + ".state"
-	state, err := cfgRead(item, notifyrcFile)
+	state, err := cfgRead(item, consts.NotifyrcFile)
 	if err != nil {
 		log.Println(err)
 		return err

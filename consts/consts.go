@@ -1,4 +1,13 @@
-package main
+package consts
+
+//app properties consts
+const (
+	AppName     = "Notifier"
+	AppUsage    = "A simple tool for notification"
+	AppHelpName = "Notifier"
+	AppVersion  = "1.2.0"
+	AppAuthor   = "ZHU YUE"
+)
 
 //limitation parameters
 const (
@@ -8,14 +17,14 @@ const (
 
 //config files
 const (
-	notifyrcFile string = ".notifyrc"
-	defaultsFile string = ".notifdef"
+	NotifyrcFile string = ".notifyrc"
+	DefaultsFile string = ".notifdef"
 )
 
 //Notifiers name
 const (
-	emailNotifier string = "smtpemailnotifier"
-	slackNotifier string = "slackNotifier"
+	EmailNotifier string = "smtpemailnotifier"
+	SlackNotifier string = "slackNotifier"
 )
 
 //ERR refers to error code(0~255), equals to uint8

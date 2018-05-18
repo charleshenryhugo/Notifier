@@ -1,10 +1,12 @@
-package main
+package emailNotify
 
 import (
 	"bytes"
 	"crypto/tls"
 	"log"
 	"net/smtp"
+	"notifier/consts"
+	"notifier/parsers"
 	"strings"
 )
 
@@ -54,7 +56,7 @@ func (mail *Mail) BuildMessage() string {
 //trims the subject if it is longer than MAX_EMAIL_SUBJECT_LEN
 //then returns the mail struct
 func newMail(from string, to []string, subject string, body string) *Mail {
-	if len(subject) > MAX_EMAIL_SUBJECT_LEN {
+	if len(subject) > consts.MAX_EMAIL_SUBJECT_LEN {
 		subject = subject[0:255]
 	}
 	mail := new(Mail)
@@ -82,7 +84,7 @@ func newSMTPServer(host string, port string) *SmtpServer {
 
 //smtpEmail sends email using SMTP protocol with a specific SMTP server and account
 //the core function of email-notifier
-func smtpEmail(mail *Mail, smtpServer *SmtpServer, pwd string) ERR {
+func smtpEmail(mail *Mail, smtpServer *SmtpServer, pwd string) consts.ERR {
 	msgBody := mail.BuildMessage()
 	log.Println("connecting smtpserver", smtpServer.ServerName())
 
@@ -92,24 +94,24 @@ func smtpEmail(mail *Mail, smtpServer *SmtpServer, pwd string) ERR {
 	conn, err := tls.Dial("tcp", smtpServer.ServerName(), smtpServer.tlsconfig)
 	if err != nil { //no such host
 		log.Println(err)
-		return SMTPM_SVR_CONN_ERR
+		return consts.SMTPM_SVR_CONN_ERR
 	}
 
 	client, err := smtp.NewClient(conn, smtpServer.host)
 	if err != nil {
 		log.Println(err)
-		return SMTPM_CLT_BLD_ERR
+		return consts.SMTPM_CLT_BLD_ERR
 	}
 
 	//Use Auth
 	if err = client.Auth(auth); err != nil { //authentication failed
 		log.Println(err)
-		return SMTPM_AUTH_ERR
+		return consts.SMTPM_AUTH_ERR
 	}
 	//add sender and receivers
 	if err = client.Mail(mail.senderID); err != nil {
 		log.Println(err)
-		return SMTPM_SENDER_ERR
+		return consts.SMTPM_SENDER_ERR
 	}
 	for _, k := range mail.toIds {
 		//no need to verify target addresses
@@ -117,7 +119,7 @@ func smtpEmail(mail *Mail, smtpServer *SmtpServer, pwd string) ERR {
 		log.Println("receiver address: ", k, " added successfully")
 		if err = client.Rcpt(k); err != nil {
 			log.Println(err)
-			return SMTPM_RCVR_ERR
+			return consts.SMTPM_RCVR_ERR
 		}
 	}
 
@@ -125,30 +127,30 @@ func smtpEmail(mail *Mail, smtpServer *SmtpServer, pwd string) ERR {
 	w, err := client.Data()
 	if err != nil {
 		log.Println(err)
-		return SMTPM_CLT_IO_ERR
+		return consts.SMTPM_CLT_IO_ERR
 	}
 
 	_, err = w.Write([]byte(msgBody))
 	if err != nil {
 		log.Println(err)
-		return SMTPM_CLT_DATA_ERR
+		return consts.SMTPM_CLT_DATA_ERR
 	}
 
 	err = w.Close()
 	if err != nil {
 		log.Println(err)
-		return SMTPM_CLT_IO_ERR
+		return consts.SMTPM_CLT_IO_ERR
 	}
 	err = client.Quit()
 	if err != nil {
 		log.Println(err)
-		return SMTPM_CLT_CLOSE_ERR
+		return consts.SMTPM_CLT_CLOSE_ERR
 	}
 
-	return SUCCESS
+	return consts.SUCCESS
 }
 
-func emailNotifyHelp(from string, to []string, subject string, msg string, SMTPHost string, SMTPPort string, pwd string) ERR {
+func emailNotifyHelp(from string, to []string, subject string, msg string, SMTPHost string, SMTPPort string, pwd string) consts.ERR {
 	mail := newMail(from, to, subject, msg)
 	smtpServer := newSMTPServer(SMTPHost, SMTPPort)
 	return smtpEmail(mail, smtpServer, pwd)
@@ -157,9 +159,9 @@ func emailNotifyHelp(from string, to []string, subject string, msg string, SMTPH
 //EmailNotify (to []string, subject, msg string, ntfs Notifiers)
 //send an email with subject and message provided with parameters
 //to the email address stored in(to []string)
-func EmailNotify(to []string, subject, msg string, ntfs Notifiers) ERR {
+func EmailNotify(to []string, subject, msg string, ntfs parsers.Notifiers) consts.ERR {
 	if len(to) == 0 {
-		return SMTPM_NOTGT
+		return consts.SMTPM_NOTGT
 	}
 	ntf := ntfs.SMTPEmailNotifier
 
@@ -170,5 +172,5 @@ func EmailNotify(to []string, subject, msg string, ntfs Notifiers) ERR {
 			ntf.SMTPHost, ntf.SMTPPort, ntf.Pwd)
 	}
 
-	return SMTPM_INVAL
+	return consts.SMTPM_INVAL
 }

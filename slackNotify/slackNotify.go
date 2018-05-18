@@ -1,14 +1,16 @@
-package main
+package slackNotify
 
 import (
 	"log"
+	"notifier/consts"
+	"notifier/parsers"
 	"strings"
 
 	"github.com/nlopes/slack"
 )
 
 //parse tokens from "notifyrc.xml"
-func getToken(ntf SlackNotifier) string {
+func getToken(ntf parsers.SlackNotifier) string {
 	if ntf.Type == "slack" && ntf.State == true {
 		return ntf.Token
 	}
@@ -42,7 +44,7 @@ func buildAttachment(title, pretext, text string) slack.Attachment {
 }
 
 //build a slack message parameter and return it
-func buildMessageParameters(attachment slack.Attachment, ntf SlackNotifier) slack.PostMessageParameters {
+func buildMessageParameters(attachment slack.Attachment, ntf parsers.SlackNotifier) slack.PostMessageParameters {
 	params := slack.PostMessageParameters{}
 	params.Attachments = []slack.Attachment{attachment}
 	params.AsUser = ntf.AsUser
@@ -52,11 +54,11 @@ func buildMessageParameters(attachment slack.Attachment, ntf SlackNotifier) slac
 }
 
 //send message to channels using your token parsed from SlackNotifier
-func postMsgChannels(ntf SlackNotifier, channelIDs []string, msgTitle, attachTitle, attachPretext, attachText string) ([]string, string, ERR) {
+func postMsgChannels(ntf parsers.SlackNotifier, channelIDs []string, msgTitle, attachTitle, attachPretext, attachText string) ([]string, string, consts.ERR) {
 	token := ntf.Token
 	if token == "" {
 		log.Println("Your slack token is invalid, please check that.")
-		return []string{}, "", SLK_TOKEN_INVAL
+		return []string{}, "", consts.SLK_TOKEN_INVAL
 	}
 	api := slack.New(token)
 	msgAttachment := buildAttachment(attachTitle, attachPretext, attachText)
@@ -73,25 +75,25 @@ func postMsgChannels(ntf SlackNotifier, channelIDs []string, msgTitle, attachTit
 			//return exact ERR code using the err string info
 			if strings.Contains(err.Error(), "auth") {
 				log.Println("Your slack token is invalid, please check that.")
-				return channelIDs, timestamp, SLK_TOKEN_INVAL
+				return channelIDs, timestamp, consts.SLK_TOKEN_INVAL
 			} else if strings.Contains(err.Error(), "dial tcp: lookup slack.com: no such host") {
 				log.Println("You may lose Internet connection or be refused by remote host.",
 					"Try fixing your network and send again")
-				return channelIDs, timestamp, SLK_SVR_CONN_ERR
+				return channelIDs, timestamp, consts.SLK_SVR_CONN_ERR
 			} else if strings.Contains(err.Error(), "channel_not_found") {
 				log.Println("Try checking this slack user(or channel):", channelID, " and send again")
-				return channelIDs, timestamp, SLK_CHL_ERR
+				return channelIDs, timestamp, consts.SLK_CHL_ERR
 			}
-			return channelIDs, timestamp, SLK_CHL_ERR
+			return channelIDs, timestamp, consts.SLK_CHL_ERR
 		}
 		log.Println("slack userID(channelID): ", channelID, " posted successfully")
 	}
 
-	return channelIDs, timestamp, SUCCESS
+	return channelIDs, timestamp, consts.SUCCESS
 }
 
 //send message to users using your token parsed from SlackNotifier
-func postMsgUsers(ntf SlackNotifier, userIDs []string, msgTitle string, attachment slack.Attachment) ([]string, string, ERR) {
+func postMsgUsers(ntf parsers.SlackNotifier, userIDs []string, msgTitle string, attachment slack.Attachment) ([]string, string, consts.ERR) {
 	return postMsgChannels(ntf, userIDs, msgTitle,
 		attachment.Title, attachment.Pretext, attachment.Text)
 }
@@ -100,13 +102,13 @@ func postMsgUsers(ntf SlackNotifier, userIDs []string, msgTitle string, attachme
 //post a notification with subject and message provided with parameters
 //to the slack userIDs(ChannelIDs) stored in(to []string)
 //ChannelID and UserID are both available
-func SlackNotify(to []string, subject, msg string, ntfs Notifiers) ([]string, string, ERR) {
+func SlackNotify(to []string, subject, msg string, ntfs parsers.Notifiers) ([]string, string, consts.ERR) {
 	ntf := ntfs.SlackNotifier
 	if ntf.State == true {
 		switch strings.ToLower(ntf.Type) {
 		case "slack":
 			if len(to) == 0 {
-				return []string{}, "", SLK_NOTGT
+				return []string{}, "", consts.SLK_NOTGT
 			}
 			attachment := slack.Attachment{Text: msg}
 			return postMsgUsers(ntf, to, subject, attachment)
@@ -120,5 +122,5 @@ func SlackNotify(to []string, subject, msg string, ntfs Notifiers) ([]string, st
 			return to, "", postMsgWebhooks(ntf.WebhookURLs, subject, msg, ntf.UserName, IconEmoji)
 		}
 	}
-	return []string{}, "", SLK_INVAL
+	return []string{}, "", consts.SLK_INVAL
 }

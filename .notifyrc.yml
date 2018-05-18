@@ -19,8 +19,8 @@ notifiers:
   slacknotifier:
     # type can only be switched to "slack" or "slackWebhook".
     # "slack" needs a token, while "slackWebhook" does not
-    type: slack
-    # type: slackWebhook
+    #type: slack
+    type: slackWebhook
     # state "on"/"true" makes slack notification valid, while state "off"/"false" makes it invalid
     state: on
     # write your slack token(you can get it from
@@ -30,8 +30,8 @@ notifiers:
     # write your target webhook urls down here(one ore more)
     # you can get it from https://api.slack.com/incoming-webhooks
     WebhookURLs:
-      - https://hooks.slack.com/services/ooooooo/pppppppp/xxxxxxxxxx
-      - https://hooks.slack.com/services/ooooooo/pppppppp/xxxxxxxxxx
+      - https://hooks.slack.com/services/222/111/000
+      - https://hooks.slack.com/services/222/111/000
     # whether you want to send notification as yourself
     # invalid when the type "slackWebhook" is switched to
     asUser: off

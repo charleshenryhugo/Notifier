@@ -3,6 +3,8 @@ package main
 import (
 	"io/ioutil"
 	"log"
+	"notifier/consts"
+	"notifier/parsers"
 	"strings"
 
 	"github.com/urfave/cli"
@@ -42,11 +44,11 @@ const (
 func appInit() *cli.App {
 	app := cli.NewApp()
 
-	app.Name = "Notifier"
-	app.Usage = "A simple tool for notification"
-	app.HelpName = "Notifier"
-	app.Version = "1.1.0"
-	app.Author = "ZHU YUE"
+	app.Name = consts.AppName
+	app.Usage = consts.AppUsage
+	app.HelpName = consts.AppHelpName
+	app.Version = consts.AppVersion
+	app.Author = consts.AppAuthor
 
 	return app
 }
@@ -55,7 +57,7 @@ func appAction(ctx *cli.Context) error {
 
 	//if user didn't specify any arguments
 	if !(ctx.IsSet("execute-send") && SendConfirm) {
-		log.Println("Please confirm execution using -x or --exe.\nUse -h or --help for more help.")
+		log.Println("\nPlease confirm execution using -x or --exe.\nUse -h or --help for more help.")
 		return nil
 	}
 
@@ -81,8 +83,8 @@ func appAction(ctx *cli.Context) error {
 	}
 	//apply the default settings to message, subject, emails or slacks
 	//if any of them is empty
-	dflt, err := parseDefaults(defaultsFile)
-	if err == NIL {
+	dflt, err := parsers.ParseDefaults(consts.DefaultsFile)
+	if err == consts.NIL {
 		//Apply default settings for any empty CLI flags
 		if Message == "" {
 			Message = dflt.GetDfltmsg()
@@ -160,7 +162,7 @@ func appCommands() []cli.Command {
 					Usage:   "Change(set) default message to be sent",
 					Action: func(c *cli.Context) error {
 						newMsg := c.Args().First()
-						return CfgDfltMsg(newMsg)
+						return parsers.CfgDfltMsg(newMsg)
 					},
 				},
 				{
@@ -170,7 +172,7 @@ func appCommands() []cli.Command {
 					Description: "hahahah",
 					Action: func(c *cli.Context) error {
 						newSbjt := c.Args().First()
-						return CfgDfltSbjt(newSbjt)
+						return parsers.CfgDfltSbjt(newSbjt)
 					},
 				},
 				{
@@ -179,7 +181,7 @@ func appCommands() []cli.Command {
 					Usage:   "Change(set) default file name which stores message",
 					Action: func(c *cli.Context) error {
 						newMsgFile := c.Args().First()
-						return CfgDfltMsgFile(newMsgFile)
+						return parsers.CfgDfltMsgFile(newMsgFile)
 					},
 				},
 				{
@@ -188,7 +190,7 @@ func appCommands() []cli.Command {
 					Usage:   "Change(set) default file name which stores target slack userID(s)",
 					Action: func(c *cli.Context) error {
 						newSlackListFile := c.Args().First()
-						return CfgDfltSlackListFile(newSlackListFile)
+						return parsers.CfgDfltSlackListFile(newSlackListFile)
 					},
 				},
 				{
@@ -197,7 +199,7 @@ func appCommands() []cli.Command {
 					Usage:   "Change(set) default file name which stores target email address(es)",
 					Action: func(c *cli.Context) error {
 						newEmailListFile := c.Args().First()
-						return CfgDfltEmailListFile(newEmailListFile)
+						return parsers.CfgDfltEmailListFile(newEmailListFile)
 					},
 				},
 			},
@@ -225,10 +227,10 @@ func appCommands() []cli.Command {
 			},
 			Action: func(ctx *cli.Context) error {
 				if ctx.Bool("email") {
-					CfgToggStat(emailNotifier)
+					parsers.CfgToggStat(consts.EmailNotifier)
 				}
 				if ctx.Bool("slack") {
-					CfgToggStat(slackNotifier)
+					parsers.CfgToggStat(consts.SlackNotifier)
 				}
 				return nil
 			},
