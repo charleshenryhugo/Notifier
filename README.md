@@ -134,6 +134,20 @@ U7BL3IC90
 
 One ID in a line and no blank line.
 
+If `U7BL3HC86` is the ID of channel `general`, then `U7BL3HC86` is totally equal to `#general`. Similarly, if `U7BL3IC87` is the ID of user `hugo`, then `U7BL3HC87` is equal to `@hugo`.
+
+Thus, the `slackListFile` above can be modified to the following form:
+
+```
+#general
+@hugo
+#random
+@Peter
+U7BL3IC90
+```
+
+Notifications are still able to be delivered to these channels/users.
+
 Don't forget to add `-x` or `-exe` to explicitly confirm the sending operation
 
 #### Example 2

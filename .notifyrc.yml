@@ -28,6 +28,7 @@ notifiers:
     # you can ignore this when you use "slackWebhook"
     token: -----------
     # write your target webhook urls down here(one ore more)
+    # Note that if you write down to or more urls here, the slack channelIDs/userIDs you specified will be ignored
     # you can get it from https://api.slack.com/incoming-webhooks
     WebhookURLs:
       - https://hooks.slack.com/services/222/111/000

@@ -60,8 +60,9 @@ func initViper(file string) *viper.Viper {
 	//name of config file(without extension)
 	nviper.SetConfigName(file)
 	//paths to look for notifyrc file in
-	nviper.AddConfigPath(".")
 	nviper.AddConfigPath("$HOME")
+	nviper.AddConfigPath(".")
+
 	//tell the viper instance to watchConfig
 	nviper.WatchConfig()
 	//provide a function for viper to run each time a config change occurs
