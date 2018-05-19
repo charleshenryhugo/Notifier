@@ -2,34 +2,28 @@
 
 Notifier is a simple command line tool written in GO and can be used to send notifications through email and slack.
 
-(This project is ready to be updated from now on. Incoming Webhook)
-
 ## Overview
 
 Notifier is a command line tool that can send emails and/or slack notifications. More notification methods are to be added. Currently the supported methods are:
 
 - e-mails
-- slack message (users have to obtain a slack token before using Notifier)
+- slack message (slack token is not necessary if users choose the slack incoming webhook)
 
 ## Prerequisites
 
-Any environments on which GOLang supports are required. More specifically,
-if you use the binary file `notifier`, then the requirements are as follows:
-
-- darwin (Windows may need a small change in the source code.)
-- amd64
+Any environments which GOLang supports are available.(Please refer to different Binary-distributions in `distros` directory.)
 
 If you have GOLang on your system, there are no extra requirements. `go get` will handle everything.
 
-Notifier is tested only on macOS and linux.
+Notifier was tested only on macOS and linux.
 
 ## Installation
 
-You can install Notifier either by downloading the binary file `notifier` or by using `go get`.
+You can install Notifier either by downloading the binary-distribution (can be found in `distros`)  or by using `go get`.
 
 ### Download directly
 
-Download the binary file:
+Download the binary distribution file according to your OS:
 
 - notifier
 
@@ -58,7 +52,7 @@ go get github.com/charleshenryhugo/Notifier
 
 which will download all files to `$GOPATH/src/github.com/` and build a binary file `Notifier` to `$GOPATH/bin/`
 
-Then put binary file in `/usr/local/bin` (or anywhere you like) and the config files just under `$HOME` as described above.
+Then put the binary file in `/usr/local/bin` (or anywhere you like) and the config files just under `$HOME` as described above.
 
 ``` shell
 cp $GOPATH/bin/Notifier /usr/local/bin/
@@ -80,7 +74,7 @@ Just type `notifier --help` or `notifier -h`, and you see the usage for options 
 COMMANDS:
      setdefault, default, def  Change(set) default settings (with some subcommands)
      setnotif, notif           Change(set) notifiers settings, (e.g. slack token, email account)
-     toggle, tog               toggle notifier state between 'on' and 'off'
+     toggle, tog               toggle notifier state between 'on' and 'off' 
      help, h                   Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
@@ -91,7 +85,7 @@ GLOBAL OPTIONS:
    --msgfile value, --mf value      Specify the file that stores your notification message (UTF-8)
    --slack-ids value, -k value      Specify the target slack userID(s). Do nothing if the slack state is off
    --slacks-file value, --kf value  Specify the file that stores target slack userID list (one address per line). Do nothing if the email state is off
-   --subject value, -s value        Specify the title/subject of your notification (UTF-8, maximum 256 bytes for emailnotification)
+   --subject value, -s value        Specify the title/subject of your notification (UTF-8, maximum 256 bytes for email notification)
    --help, -h                       show help
    --version, -v                    print the version
 ```
@@ -105,7 +99,11 @@ You can find more details in the file in the repository.
 
 - $HOME/.notifyrc.yml
 
-This file is used for configuring the notification methods such as a slack token and an email account
+This file is used for configuring the notification methods such as a slack token, a slack incoming webhookurl or an email account
+
+Especially for the notifier `slacknotifier`, if the type is `slack`, a valid token is necessary. However, if  the type is `slackWebhook`, valid slack webhook incoming urls are needed.
+
+If your `$HOME/.notifyrc.yml` is accessible by others users, type `slackWebhook` is recommanded for the safe of your slack account. For example, depositing your token on a HPC cluster is high-risk because the administrator can do anything with your account including reading your message.
 
 There is a key `state` in .notifyrc.yml. When its value is `off` (or `false`), any operations associated with that notifier will not be executed. So set the `state` as `on` (or `true`) to make sure that that notifier is valid.
 You can find more details in the file in the repository.
@@ -156,7 +154,13 @@ Don't forget to add `-x` or `-exe` to explicitly confirm the sending operation
 notifier -x -ef "somedir/emailListFile" -k U7BL3HC86 -k U7BL3HC87 -k U7BL3HC88
 ```
 
-This will send a notification to slack ID U7BL3HC86, U7BL3HC87, U7BL3HC88 and the email addresses stored in somedir/emailListFile
+or
+
+```
+notifier -x -ef "somedir/emailListFile" -k #general -k @hugo -k U7BL3HC88
+```
+
+This will send a notification to channel general(id is U7BL3HC86), user hugo(U7BL3HC87), slack ID U7BL3HC88 and the email addresses stored in somedir/emailListFile
 which looks like this:
 somedir/emailListFile
 
@@ -252,6 +256,16 @@ Exit Code |   Temporary or Permanent   |  Meaning | What to Do |
 30 | P | slack token is invalid | check your slack token (in config file)
 31 | P | target slack user ID or channel ID invalid | check target slack IDs
 32 | T | lose internet connection or get refused by slack host | wait for seconds and try again
+39 | P | network connection failed when post request to slack webhook | check your internet connection
+40 | P | HTTP 400 Bad Request. The data sent in your request cannot be understood as presented | check your message and subject, use plain text and try again
+41 | P | HTTP 410 Gone. the channel has been archived and doesn't accept further messages, even from your incoming webhook. | You cannot use webhook for posting notifications to this channel
+42 | P | HTTP 400 Bad Request. Target slack user ID does not actually exist | check target slack user ID you specified and try again
+43 | P | HTTP 403 Forbidden. The team associated with your post has some kind of restriction on the webhook posting in this context. | You cannot use webhook for posting notifications in this context
+44 | P | HTTP 404 Not Found. The channel you specified does not actually exist. | check target slack channel ID you specified and try again
+50 | P | HTTP 500 Server Error. Something strange and unusual happened that was likely not your fault at all. | No solution
+
+It's worth mentioning that, Google has set some restrictions to sending emails through your own Apps (Other companies also do the same thing). You will get error code `14` when the restrictions work. Get an gmail application specific password or just lower your security authentication to solve this. 
+
 
 ## Uninstallation
 
