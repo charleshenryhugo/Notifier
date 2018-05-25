@@ -2,6 +2,7 @@ package slackNotify
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"notifier/consts"
 	"strings"
@@ -47,33 +48,35 @@ func postMsgWebhookWithChannel(hookURL string, channelID, title, text string, us
 	payload := buildPayload(channelID, title, text, userName, iconEmoji)
 	body := strings.NewReader(payload)
 	req, err := http.NewRequest("POST", hookURL, body)
-	//fmt.Println("req:", req)
+	//log.Println("req:", req)
 	if err != nil {
-		fmt.Println("Please check you network connection and try again.")
+		log.Println("Please check you network connection and try again.")
 		return consts.REQ_FAIL
 	}
 	resp, err := http.DefaultClient.Do(req)
 	//check the response status code. (default: 200 OK)
+	//slack's incoming webhook page only provides 5 kind of error codes
+	//https://api.slack.com/changelog/2016-05-17-changes-to-errors-for-incoming-webhooks
 	switch resp.StatusCode {
 	case 400:
-		fmt.Println("[HTTP 400 BAD REQUEST]. The payload you sent can not be understood: " + payload)
+		log.Println("[HTTP 400 BAD REQUEST]. The payload you sent can not be understood: " + payload)
 		return consts.INVALID_PAYLOAD
 	case 403:
-		fmt.Println("[HTTP 403 FORBIDDEN]. The team associated with your posting has some kind of restriction on the webhook posting in this context")
+		log.Println("[HTTP 403 FORBIDDEN]. The team associated with your posting has some kind of restriction on the webhook posting in this context")
 		return consts.ACTION_FORBID
 	case 404:
-		fmt.Println("[HTTP 404 NOT FOUND]. Invalid Webhook or channel ID.\nPlease check the target channel \"" + channelID +
+		log.Println("[HTTP 404 NOT FOUND]. Invalid Webhook or channel ID.\nPlease check the target channel \"" + channelID +
 			"\" or Webhook url: " + hookURL)
 		return consts.CHL_NOT_FOUND
 	case 410:
-		fmt.Println("[HTTP 410 GONE]. The channel \"" + channelID + "\" has been archived and doesn't accept further messages, even from your incoming webhook")
+		log.Println("[HTTP 410 GONE]. The channel \"" + channelID + "\" has been archived and doesn't accept further messages, even from your incoming webhook")
 		return consts.CHL_ARCHIVED
 	case 500:
-		fmt.Println("[HTTP 500 SERVER ERR]. Something strange and unusual happened that was likely not your fault at all.")
+		log.Println("[HTTP 500 SERVER ERR]. Something strange and unusual happened that was likely not your fault at all.")
 		return consts.ROLLUP_ERROR
 	}
 	resp.Body.Close()
 
-	fmt.Println("[HTTP 200 OK]. Message posted successfully with webhook url: " + hookURL)
+	log.Println("[HTTP 200 OK]. Message posted successfully")
 	return consts.NIL
 }
